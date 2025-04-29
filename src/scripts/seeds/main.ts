@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
-import { generateDailyOrders } from './generate-daily-orders';
+import { initialSeed } from './initial-seed';
 
 dotenv.config();
 
 function mainSeeder() {
-  generateDailyOrders();
+  initialSeed();
 }
 
 mainSeeder();
