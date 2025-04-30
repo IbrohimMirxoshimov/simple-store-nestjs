@@ -100,4 +100,23 @@ export class StatisticsService {
 
     return dailyOrderTotals;
   }
+
+  async getDailyTopSoldProducts(startDate: Date, endDate: Date) {
+    const dailyTopSoldProducts = await this.drizzle.db
+      .select({
+        date: sql<string>`date_trunc('day', ${orders.createdAt})::date`,
+        productId: products.id,
+        productName: products.name,
+        totalSold: sql<number>`sum(order_items.quantity)`
+      })
+      .from(products)
+      .leftJoin(orderItems, sql`products.id = order_items."productId"`)
+      .leftJoin(orders, sql`order_items."orderId" = orders.id`)
+      .where(sql`${orders.createdAt} between ${startDate} and ${endDate}`)
+      .groupBy(sql`date_trunc('day', ${orders.createdAt})::date`, products.id, products.name)
+      .orderBy(sql`sum(order_items.quantity) desc`)
+      .limit(10);
+
+    return dailyTopSoldProducts;
+  }
 }

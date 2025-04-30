@@ -49,4 +49,11 @@ export class StatisticsController {
       new Date(dateRange.endDate),
     );
   }
+
+  @Post('daily-top-sold-products')
+  async getDailyTopSoldProducts(@Body() dateRange: DateRangeDto) {
+    const start = new Date(dateRange.startDate);
+    const end = new Date(dateRange.endDate);
+    return this.statisticsService.getDailyTopSoldProducts(start, end);
+  }
 }
